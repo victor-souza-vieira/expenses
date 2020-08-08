@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transaction_form.dart';
 import 'package:flutter/material.dart';
 
@@ -39,19 +40,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transations = [
-    /* Transaction(
-        id: 't1',
-        title: 'Novo tênis de corrida',
-        value: 310.76,
-        date: DateTime.now()),
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't0',
+      title: 'Conta #00',
+      value: 40.00,
+      date: DateTime.now().subtract(Duration(days: 33)),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'Conta #01',
+      value: 10.76,
+      date: DateTime.now().subtract(Duration(days: 4)),
+    ),
     Transaction(
       id: 't2',
-      title: 'Conta de luz',
-      value: 211.30,
+      title: 'Conta #02',
+      value: 31.46,
+      date: DateTime.now().subtract(Duration(days: 5)),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta #03',
+      value: 21.30,
       date: DateTime.now(),
-    ), */
+    ),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList();
+  }
 
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
@@ -61,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
       date: DateTime.now(),
     );
     setState(() {
-      _transations.add(newTransaction);
+      _transactions.add(newTransaction);
     });
 
     Navigator.of(context).pop();
@@ -94,13 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              child: Card(
-                color: Colors.green,
-                child: Text("Gráfico"),
-              ),
-            ),
-            TransactionList(transactions: _transations),
+            Chart(recentsTransactions: _recentTransactions),
+            TransactionList(transactions: _transactions),
           ],
         ),
       ),
