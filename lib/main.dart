@@ -24,8 +24,11 @@ class ExpensesApp extends StatelessWidget {
           textTheme: ThemeData.light().textTheme.copyWith(
                 headline6: TextStyle(
                   fontFamily: 'OpenSans',
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
+                ),
+                button: TextStyle(
+                  color: Colors.white,
                 ),
               ),
         ),
@@ -45,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
       id: 't0',
       title: 'Conta #00',
       value: 40.00,
-      date: DateTime.now().subtract(Duration(days: 33)),
+      date: DateTime.now().subtract(Duration(days: 0)),
     ),
     Transaction(
       id: 't1',
@@ -63,7 +66,19 @@ class _MyHomePageState extends State<MyHomePage> {
       id: 't3',
       title: 'Conta #03',
       value: 21.30,
-      date: DateTime.now(),
+      date: DateTime.now().subtract(Duration(days: 2)),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'Conta #04',
+      value: 199.90,
+      date: DateTime.now().subtract(Duration(days: 1)),
+    ),
+    Transaction(
+      id: 't5',
+      title: 'Conta #05',
+      value: 251.99,
+      date: DateTime.now().subtract(Duration(days: 3)),
     ),
   ];
 
@@ -99,9 +114,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _deleteTransaction(String transactionIndex) {
-    /* if (transactionIndex < 0 || transactionIndex >= _transactions.length) {
+    if (transactionIndex.isEmpty) {
       return;
-    } */
+    }
     setState(() {
       _transactions.removeWhere((tr) {
         return tr.id.compareTo(transactionIndex) == 0;
