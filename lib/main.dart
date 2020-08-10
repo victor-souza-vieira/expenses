@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transaction_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'components/transaction_list.dart';
 import 'models/transaction.dart';
@@ -13,6 +14,10 @@ main() => runApp(ExpensesApp());
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    /* SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]); */
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
@@ -82,6 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  bool _showChart = false;
+
   List<Transaction> get _recentTransactions {
     return _transactions.where((tr) {
       return tr.date.isAfter(DateTime.now().subtract(
@@ -150,17 +157,33 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              height: avaiableHeight * 0.3,
-              child: Chart(recentsTransactions: _recentTransactions),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Exibir gráfico'),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            Container(
-              height: avaiableHeight * 0.7,
-              child: TransactionList(
-                transactions: _transactions,
-                onRemove: _deleteTransaction,
+            if (_showChart)
+              Container(
+                height: avaiableHeight * 0.3,
+                child: Chart(recentsTransactions: _recentTransactions),
               ),
-            ),
+            if (!_showChart)
+              Container(
+                height: avaiableHeight * 0.7,
+                child: TransactionList(
+                  transactions: _transactions,
+                  onRemove: _deleteTransaction,
+                ),
+              ),
           ],
         ),
       ),
