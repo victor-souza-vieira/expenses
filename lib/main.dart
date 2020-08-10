@@ -44,7 +44,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    /* Transaction(
+    Transaction(
       id: 't0',
       title: 'Conta #00',
       value: 40.00,
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'Conta #05',
       value: 251.99,
       date: DateTime.now().subtract(Duration(days: 3)),
-    ), */
+    ),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -126,26 +126,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Despesas pessoais",
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _openTransactionFormModal(context),
-          )
-        ],
+    final appBar = AppBar(
+      title: Text(
+        "Despesas pessoais",
+        /* style: TextStyle(
+          fontSize: 20 * MediaQuery.of(context).textScaleFactor,
+        ), */
       ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => _openTransactionFormModal(context),
+        )
+      ],
+    );
+    final avaiableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(recentsTransactions: _recentTransactions),
-            TransactionList(
-              transactions: _transactions,
-              deleteTransaction: _deleteTransaction,
+            Container(
+              height: avaiableHeight * 0.3,
+              child: Chart(recentsTransactions: _recentTransactions),
+            ),
+            Container(
+              height: avaiableHeight * 0.7,
+              child: TransactionList(
+                transactions: _transactions,
+                onRemove: _deleteTransaction,
+              ),
             ),
           ],
         ),
