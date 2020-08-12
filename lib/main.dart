@@ -137,17 +137,21 @@ class _MyHomePageState extends State<MyHomePage> {
         MediaQuery.of(context).orientation == Orientation.landscape;
 
     final appBar = AppBar(
-      title: Text(
-        "Despesas pessoais",
-        /* style: TextStyle(
-          fontSize: 20 * MediaQuery.of(context).textScaleFactor,
-        ), */
-      ),
+      title: Text("Despesas pessoais"),
       actions: [
+        if (isLandScape)
+          IconButton(
+            icon: Icon(_showChart ? Icons.list : Icons.show_chart_rounded),
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+          ),
         IconButton(
           icon: Icon(Icons.add),
           onPressed: () => _openTransactionFormModal(context),
-        )
+        ),
       ],
     );
     final avaiableHeight = MediaQuery.of(context).size.height -
@@ -160,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (isLandScape)
+            /*   if (isLandScape)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -174,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                 ],
-              ),
+              ), */
             if (_showChart || !isLandScape)
               Container(
                 height: avaiableHeight * (isLandScape ? 0.7 : 0.3),
@@ -182,7 +186,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             if (!_showChart || !isLandScape)
               Container(
-                height: avaiableHeight * 0.7,
+                height:
+                    (isLandScape ? avaiableHeight * 0.9 : avaiableHeight * 0.7),
                 child: TransactionList(
                   transactions: _transactions,
                   onRemove: _deleteTransaction,
