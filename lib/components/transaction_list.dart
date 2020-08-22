@@ -62,24 +62,30 @@ class TransactionList extends StatelessWidget {
                     DateFormat('dd MMM y').format(tr.date),
                   ),
                   trailing: Container(
-                    width: 100,
+                    width: 120,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.edit,
-                            color: Colors.amber[700],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => onRemove(tr.id),
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.red[700],
-                          ),
-                        ),
+                        MediaQuery.of(context).size.width > 400
+                            ? FlatButton.icon(
+                                onPressed: () => onRemove(tr.id),
+                                icon:
+                                    Icon(Icons.delete, color: Colors.red[700]),
+                                label: Text('Deletar'),
+                                textColor: Colors.red[700],
+                              )
+                            : /* IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.amber[700],
+                                ),
+                              ), */
+                            IconButton(
+                                onPressed: () => onRemove(tr.id),
+                                icon:
+                                    Icon(Icons.delete, color: Colors.red[700]),
+                              ),
                       ],
                     ),
                   ),
