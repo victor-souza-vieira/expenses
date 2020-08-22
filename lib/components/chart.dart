@@ -1,12 +1,12 @@
-import 'package:expenses/components/chart_bar.dart';
-import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../models/transaction.dart';
+import 'chart_bar.dart';
 
 class Chart extends StatelessWidget {
-  final List<Transaction> recentsTransactions;
+  final List<Transaction> recentTransaction;
 
-  Chart({this.recentsTransactions});
+  Chart(this.recentTransaction);
 
   List<Map<String, Object>> get groupedTransactions {
     return List.generate(7, (index) {
@@ -16,15 +16,16 @@ class Chart extends StatelessWidget {
 
       double totalSum = 0.0;
 
-      for (var i = 0; i < recentsTransactions.length; i++) {
-        bool sameDay = recentsTransactions[i].date.day == weekDay.day;
-        bool sameMonth = recentsTransactions[i].date.month == weekDay.month;
-        bool sameYear = recentsTransactions[i].date.year == weekDay.year;
+      for (var i = 0; i < recentTransaction.length; i++) {
+        bool sameDay = recentTransaction[i].date.day == weekDay.day;
+        bool sameMonth = recentTransaction[i].date.month == weekDay.month;
+        bool sameYear = recentTransaction[i].date.year == weekDay.year;
 
         if (sameDay && sameMonth && sameYear) {
-          totalSum += recentsTransactions[i].value;
+          totalSum += recentTransaction[i].value;
         }
       }
+
       return {
         'day': DateFormat.E().format(weekDay)[0],
         'value': totalSum,
@@ -34,7 +35,7 @@ class Chart extends StatelessWidget {
 
   double get _weekTotalValue {
     return groupedTransactions.fold(0.0, (sum, tr) {
-      return sum += tr['value'];
+      return sum + tr['value'];
     });
   }
 
@@ -46,20 +47,18 @@ class Chart extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: groupedTransactions.map((tr) {
-              return Flexible(
-                fit: FlexFit.tight,
-                child: ChartBar(
-                  label: tr['day'],
-                  value: tr['value'],
-                  percentage: _weekTotalValue <= 0
-                      ? 0
-                      : (tr['value'] as double) /
-                          _weekTotalValue, // division by zero exists here
-                ),
-              );
-            }).toList()),
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupedTransactions.map((tr) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                label: tr['day'],
+                value: tr['value'],
+                percentage: _weekTotalValue == 0 ? 0 : (tr['value'] as double) / _weekTotalValue,
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
